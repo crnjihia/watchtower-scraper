@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg
+*.egg-info/
+dist/
+build/
+*.manifest
+*.spec
+
+# Poetry
+poetry.lock
+
+# Environment
+.env
+.env.*
+
+# SQLite DB
+*.db
+data/
+
+# Docker
+docker-compose.override.yml
+
+# VS Code
+.vscode/
+
+# IDE / OS
+.idea/
+*.iml
+.DS_Store
+Thumbs.db

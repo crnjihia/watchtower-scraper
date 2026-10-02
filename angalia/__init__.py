@@ -1,0 +1,1 @@
+"""Angalia Scraper package."""

@@ -1,0 +1,35 @@
+version: "3.9"
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: angalia_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+
+  worker:
+    build: .
+    container_name: angalia_worker
+    restart: unless-stopped
+    depends_on:
+      - redis
+    env_file: .env.example
+    command: >
+      celery -A angalia.celery_app.celery_app worker
+      --loglevel=info
+    volumes:
+      - ./data:/app/data  # persists SQLite DB
+
+  beat:
+    build: .
+    container_name: angalia_beat
+    restart: unless-stopped
+    depends_on:
+      - redis
+    env_file: .env.example
+    command: >
+      celery -A angalia.celery_app.celery_app beat
+      --loglevel=info
+    volumes:
+      - ./data:/app/data
