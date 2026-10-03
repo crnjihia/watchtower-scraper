@@ -1,35 +1,37 @@
 [project]
 name = "angalia-scraper"
 version = "0.1.0"
-description = "Scrapy‑based scraper for Kenyan job boards & e‑commerce sites."
+description = "Ethical Scrapy-based scraper for Kenyan job boards and e-commerce sites."
 readme = "README.md"
 requires-python = ">=3.11"
 license = {text = "MIT"}
-authors = [{name = "Your Name", email = "you@example.com"}]
+authors = [{name = "Angalia Team", email = "dev@angalia.io"}]
 
 [project.urls]
 Homepage = "https://github.com/yourorg/angalia-scraper"
 
-[project.dependencies]
-python = ">=3.11"
-scrapy = "^2.11"
-scrapy-rotating-proxies = "^0.6.2"
-scrapy-user-agents = "^0.1.1"
-SQLAlchemy = "^2.0"
-alembic = "^1.13"
-celery = "^5.4"
-redis = "^5.0"
-python-telegram-bot = {extras = ["async"], version = "^21.2"}
-sendgrid = "^6.11"
-structlog = "^24.1"
-Jinja2 = "^3.1"
-PyYAML = "^6.0"
-httpx = "^0.27"
+dependencies = [
+    "scrapy>=2.11.0",
+    "scrapy-rotating-proxies>=0.6.2",
+    "scrapy-user-agents>=0.1.1",
+    "SQLAlchemy>=2.0.0",
+    "celery>=5.4.0",
+    "redis>=5.0.0",
+    "python-telegram-bot>=21.2",
+    "sendgrid>=6.11.0",
+    "structlog>=24.1.0",
+    "Jinja2>=3.1.0",
+    "PyYAML>=6.0.0",
+    "httpx>=0.27.0",
+]
+
 
 [project.optional-dependencies]
 dev = [
     "pytest>=8.0",
     "responses>=0.25",
+    "pytest-mock>=3.12",
+    "pytest-asyncio>=0.23",
     "black>=24.2",
     "isort>=5.13",
     "ruff>=0.4",
@@ -38,3 +40,17 @@ dev = [
 [build-system]
 requires = ["setuptools>=70"]
 build-backend = "setuptools.build_meta"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+
+

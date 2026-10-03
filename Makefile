@@ -1,4 +1,4 @@
-.PHONY: up down logs ps lint test clean
+.PHONY: up down logs ps lint test clean status crawl alerts demo worker beat
 
 up:
 	docker-compose up -d
@@ -13,12 +13,28 @@ ps:
 	docker-compose ps
 
 lint:
-	poetry run black .
-	poetry run isort .
-	poetry run ruff check .
+	ruff check .
 
 test:
-	poetry run pytest -vv --cov=angalia
+	pytest -v
+
+status:
+	python run.py status
+
+crawl:
+	python run.py crawl jobs --limit 5
+
+alerts:
+	python run.py alerts --dry-run
+
+demo:
+	python run.py demo
+
+worker:
+	python run.py worker
+
+beat:
+	python run.py beat
 
 clean:
-	rm -rf .venv .pytest_cache .mypy_cache build dist *.egg-info
+	rm -rf .pytest_cache .ruff_cache build dist *.egg-info

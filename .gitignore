@@ -7,6 +7,8 @@ dist/
 build/
 *.manifest
 *.spec
+.pytest_cache/
+.ruff_cache/
 
 # Poetry
 poetry.lock
@@ -14,6 +16,7 @@ poetry.lock
 # Environment
 .env
 .env.*
+!.env.example
 
 # SQLite DB
 *.db

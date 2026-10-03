@@ -7,6 +7,8 @@ services:
     restart: unless-stopped
     ports:
       - "6379:6379"
+    volumes:
+      - redis_data:/data
 
   worker:
     build: .
@@ -14,12 +16,11 @@ services:
     restart: unless-stopped
     depends_on:
       - redis
-    env_file: .env.example
-    command: >
-      celery -A angalia.celery_app.celery_app worker
-      --loglevel=info
+    env_file:
+      - .env.example
+    command: celery -A angalia.celery_app.celery_app worker --loglevel=info
     volumes:
-      - ./data:/app/data  # persists SQLite DB
+      - ./data:/app/data
 
   beat:
     build: .
@@ -27,9 +28,11 @@ services:
     restart: unless-stopped
     depends_on:
       - redis
-    env_file: .env.example
-    command: >
-      celery -A angalia.celery_app.celery_app beat
-      --loglevel=info
+    env_file:
+      - .env.example
+    command: celery -A angalia.celery_app.celery_app beat --loglevel=info
     volumes:
       - ./data:/app/data
+
+volumes:
+  redis_data:
