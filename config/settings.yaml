@@ -1,0 +1,10 @@
+# Angalia Scraper - Optional Settings Overrides
+# Any key specified here will override the default in angalia/settings.py
+
+# BOT_NAME: "angalia"
+# ROBOTSTXT_OBEY: true
+# DOWNLOAD_DELAY: 2.0
+# CONCURRENT_REQUESTS_PER_DOMAIN: 1
+# AUTOTHROTTLE_ENABLED: true
+# RETRY_TIMES: 3
+# LOG_LEVEL: "INFO"
