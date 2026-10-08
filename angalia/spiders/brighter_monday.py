@@ -66,15 +66,23 @@ class BrighterMondaySpider(scrapy.Spider):
                 .strip()
             )
             company = (
-                response.css("div.company-name a::text, a.company::text, span.company::text, h2.text-base::text")
+                response.css(
+                    "div.company-name a::text, a.company::text, span.company::text, h2.text-base::text, a[href*='/companies/']::text, a[href*='/employer/']::text, p[class*='text-sm'] a::text"
+                )
                 .get(default="")
                 .strip()
             )
             if not company:
                 company = response.xpath("//h1/following::h2[1]//text()").get(default="").strip()
             if not company:
+                company = response.xpath(
+                    "//a[contains(@href, '/companies/') or contains(@href, '/employer/')]//text()"
+                ).get(default="").strip()
+            if not company:
                 company_parts = response.css("div.company-name ::text").getall()
                 company = " ".join([p.strip() for p in company_parts if p.strip()])
+            if not company:
+                company = "Confidential Employer"
 
             location = (
                 response.css(

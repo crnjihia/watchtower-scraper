@@ -60,6 +60,8 @@ class FuzuSpider(scrapy.Spider):
                 .get(default="")
                 .strip()
             )
+            if not company:
+                company = "Confidential Employer"
             location = (
                 response.css("span.location::text, div.location::text")
                 .get(default="")

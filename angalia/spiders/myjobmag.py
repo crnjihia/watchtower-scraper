@@ -64,6 +64,8 @@ class MyJobMagSpider(scrapy.Spider):
             )
             if not company and " at " in title:
                 company = title.split(" at ")[-1].strip()
+            if not company:
+                company = "Confidential Employer"
 
             location = (
                 response.css("span.location::text, div.location::text")
