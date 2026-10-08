@@ -1,1 +1,1 @@
-"""Angalia Scraper package."""
+"""Watchtower Scraper package."""

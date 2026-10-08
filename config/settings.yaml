@@ -1,4 +1,4 @@
-# Angalia Scraper - Optional Settings Overrides
+# Watchtower Scraper - Optional Settings Overrides
 # Any key specified here will override the default in angalia/settings.py
 
 # BOT_NAME: "angalia"

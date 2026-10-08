@@ -68,7 +68,7 @@ if ROTATING_PROXY_LIST:
 
 
 # User agent fallback identifying our bot ethically
-USER_AGENT = "AngaliaScraper/1.0 (+https://github.com/yourorg/angalia-scraper; ethical-bot)"
+USER_AGENT = "WatchtowerScraper/1.0 (+https://github.com/yourorg/watchtower-scraper; ethical-bot)"
 
 # ----------------------------------------------------------------------
 # Item pipelines

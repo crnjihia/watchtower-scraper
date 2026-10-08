@@ -24,7 +24,6 @@ class AngaliaItem:
     scraped_at: datetime = field(default_factory=utc_now)
     content_hash: str = ""
 
-
     def __post_init__(self):
         if not self.content_hash:
             self.content_hash = self.compute_hash()
@@ -59,6 +58,10 @@ class AngaliaItem:
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "AngaliaItem":
         raise NotImplementedError
+
+
+# Alias for Watchtower Scraper branding
+WatchtowerItem = AngaliaItem
 
 
 # ---- Job items ---------------------------------------------------------

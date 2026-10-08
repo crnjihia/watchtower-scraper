@@ -1,14 +1,14 @@
 [project]
-name = "angalia-scraper"
+name = "watchtower-scraper"
 version = "0.1.0"
 description = "Ethical Scrapy-based scraper for Kenyan job boards and e-commerce sites."
 readme = "README.md"
 requires-python = ">=3.11"
 license = {text = "MIT"}
-authors = [{name = "Angalia Team", email = "dev@angalia.io"}]
+authors = [{name = "Watchtower Team", email = "dev@watchtower.io"}]
 
 [project.urls]
-Homepage = "https://github.com/yourorg/angalia-scraper"
+Homepage = "https://github.com/yourorg/watchtower-scraper"
 
 dependencies = [
     "scrapy>=2.11.0",

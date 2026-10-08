@@ -1,5 +1,5 @@
 """
-Angalia Scraper Middlewares.
+Watchtower Scraper Middlewares.
 
 Handles custom spider and downloader middleware functionality.
 Core anti-blocking behaviour is configured in settings.py:
