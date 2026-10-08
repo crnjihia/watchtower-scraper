@@ -1,5 +1,5 @@
 """
-Angalia Scraper - Unified Application Runner & CLI
+Watchtower Scraper - Unified Application Runner & CLI
 Usage:
     python run.py status
     python run.py crawl [spider_name|jobs|products|all] [--limit N]
@@ -38,7 +38,7 @@ def cmd_status(args):
 
     init_db()
     print("=" * 60)
-    print("  ANGALIA SCRAPER - SYSTEM STATUS")
+    print("  WATCHTOWER SCRAPER - SYSTEM STATUS")
     print("=" * 60)
 
     with get_session() as session:
@@ -178,11 +178,21 @@ def cmd_test(args):
 def cmd_demo(args):
     """Run an end-to-end live demonstration."""
     print("=" * 60)
-    print("  ANGALIA SCRAPER - LIVE DEMONSTRATION")
+    print("  WATCHTOWER SCRAPER - LIVE DEMONSTRATION")
     print("=" * 60)
-    # 1. Run quick crawl with limit 2
-    print("\n1. Crawling sample listings from 'myjobmag' (limit=2)...")
-    cmd = [sys.executable, "-m", "scrapy", "crawl", "myjobmag", "-s", "CLOSESPIDER_ITEMCOUNT=2"]
+    # 1. Run quick crawl with limit 2 pages
+    print("\n1. Crawling sample listings from 'myjobmag'...")
+    cmd = [
+        sys.executable,
+        "-m",
+        "scrapy",
+        "crawl",
+        "myjobmag",
+        "-s",
+        "CLOSESPIDER_PAGECOUNT=2",
+        "-s",
+        "CLOSESPIDER_ITEMCOUNT=2",
+    ]
     subprocess.run(cmd)
 
     # 2. Show status
@@ -200,7 +210,7 @@ def cmd_demo(args):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Angalia Scraper Management CLI")
+    parser = argparse.ArgumentParser(description="Watchtower Scraper Management CLI")
     subparsers = parser.add_subparsers(dest="command", help="Sub-command to execute")
 
     # status
