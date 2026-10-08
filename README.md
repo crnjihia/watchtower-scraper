@@ -1,4 +1,4 @@
-# Angalia Scraper
+# Watchtower Scraper
 
 <p align="center">
   <img src="https://img.shields.io/badge/Python-3.11%2B-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python 3.11+" />
@@ -9,15 +9,19 @@
   <img src="https://img.shields.io/badge/License-MIT-blue?style=for-the-badge" alt="License: MIT" />
 </p>
 
-> **Angalia** (*"Watch / Observe"* in Swahili) is an ethical, event-driven web scraping and market intelligence engine. It continuously monitors Kenyan job boards (**BrighterMonday**, **Fuzu**, **MyJobMag**) and e-commerce giants (**Jumia**, **Kilimall**) for new vacancies and price drops, computes precise state diffs using SQLite, and dispatches real-time structured alerts via **Telegram** and **SendGrid** daily email digests.
+> **Watchtower** is an ethical, event-driven web scraping and market intelligence engine. It continuously monitors Kenyan job boards (**BrighterMonday**, **Fuzu**, **MyJobMag**) and e-commerce giants (**Jumia**, **Kilimall**) for new vacancies and price drops, computes precise state diffs using SQLite, and dispatches real-time structured alerts via **Telegram** and **SendGrid** daily email digests.
 
 ---
 
 ## Live Telemetry & CLI Status
 
 <p align="center">
-  <img src="docs/images/cli-status.png" alt="Angalia Scraper CLI Status" width="850" />
+  <img src="docs/images/cli-status.png" alt="Watchtower Scraper CLI Status" width="850" />
 </p>
+
+*The screenshot above demonstrates live execution of Watchtower Scraper:*
+1. **`python run.py status`**: Real-time inventory readout displaying 74 indexed items across Kenyan job boards (`brightermonday` and `myjobmag`), historical diff tracking, and dispatched alerts counter.
+2. **`python run.py alerts --dry-run`**: Event-driven notification engine discovering 42 change events over the lookback window, formatting instant Telegram markdown messages with rich emoji tags, and generating the dynamic SendGrid daily digest subject (`Watchtower Daily: 41 new jobs, 1 update`).
 
 ---
 
@@ -34,6 +38,7 @@
 - [Configuration & Environment Variables](#configuration--environment-variables)
 - [Extensibility: Adding a New Spider](#extensibility-adding-a-new-spider)
 - [Testing & Quality Assurance](#testing--quality-assurance)
+- [GitHub Setup & Publication Guide](#github-setup--publication-guide)
 - [License](#license)
 
 ---
@@ -129,12 +134,12 @@ flowchart TD
 
 ## Ethical Scraping & Rate Limits
 
-Angalia Scraper is strictly engineered to be a respectful, non-disruptive citizen of the web:
+Watchtower Scraper is strictly engineered to be a respectful, non-disruptive citizen of the web:
 
 1. **`robots.txt` Adherence**: Honored strictly by default on all targets (`ROBOTSTXT_OBEY = True`).
 2. **Strict Concurrency Limits**: Capped to **1 concurrent request per domain** (`CONCURRENT_REQUESTS_PER_DOMAIN = 1`).
 3. **Adaptive AutoThrottle**: Measures web server response latencies and dynamically adjusts delay with a minimum 2.0-second delay between requests (`DOWNLOAD_DELAY = 2`).
-4. **Transparent User-Agent**: Identifies the crawler responsibly (`AngaliaScraper/1.0 (+https://github.com/yourorg/angalia-scraper; ethical-bot)`).
+4. **Transparent User-Agent**: Identifies the crawler responsibly (`WatchtowerScraper/1.0 (+https://github.com/yourorg/watchtower-scraper; ethical-bot)`).
 5. **Public Data Only**: Monitors publicly discoverable catalog pages and listings; accesses no restricted, gated, or personal account data.
 
 | Target Domain | Concurrent Cap | Static Delay | AutoThrottle Target | Proxy Support |
@@ -197,27 +202,83 @@ make down     # Stop Docker Compose stack
 ## Notification Engine
 
 ### 1. Telegram Instant Alerts
-Telegram messages are formatted with markdown emojis and organized by source:
+Telegram messages are dispatched via `python-telegram-bot` with markdown formatting, emoji tags, and organized grouped batches:
 
+#### Alert Screenshot & UI Description:
+In the Telegram client, notifications appear as rich, clickable markdown bubbles with highlighted event tags and inline metadata:
 ```text
-📢 Angalia Alert — BRIGHTERMONDAY
-
-🆕 [Brightermonday] [Infrastructure Project Manager](https://www.brightermonday.co.ke/listings/infrastructure-project-manager-n9dwde) at *Human Practice Foundation Kenya*
-🆕 [Brightermonday] [Digital Sales Executive](https://www.brightermonday.co.ke/listings/digital-sales-executive-0k2n7g) at *KHM Consultants*
-
-────────────────────────────────────────
-
-📢 Angalia Alert — JUMIA
-
-📉 [Jumia] [Apple iPhone 15 128GB](https://www.jumia.co.ke/p/apple-iphone-15): Price dropped *118,000.0 → 112,500.0*
+┌────────────────────────────────────────────────────────┐
+│ 🤖 Watchtower Alerts Bot                         08:05 │
+├────────────────────────────────────────────────────────┤
+│ 📢 Watchtower Alert — BRIGHTERMONDAY                   │
+│                                                        │
+│ 🆕 [Brightermonday] Senior Python Engineer at Safaricom│
+│    https://www.brightermonday.co.ke/jobs/py-eng-101   │
+│                                                        │
+│ 🆕 [Brightermonday] Cloud Solutions Architect at Equity│
+│    https://www.brightermonday.co.ke/jobs/cloud-arch-201│
+└────────────────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────┐
+│ 🤖 Watchtower Alerts Bot                         08:06 │
+├────────────────────────────────────────────────────────┤
+│ 📢 Watchtower Alert — JUMIA                            │
+│                                                        │
+│ 📉 [Jumia] Apple iPhone 15 128GB: Price dropped        │
+│    *118,000.0 → 112,500.0*                             │
+│    https://www.jumia.co.ke/p/apple-iphone-15           │
+└────────────────────────────────────────────────────────┘
 ```
+- **🆕 Green Tag**: Signifies a newly indexed job listing or catalog product.
+- **📉 Price Drop**: Highlights price decreases with previous and new amounts.
+- **📈 Price Rise**: Flags upward price changes.
+- **Clickable Links**: Directs subscribers instantly to the original job or product page.
 
 ### 2. SendGrid Daily Email Digest
 An HTML digest rendered via Jinja2 summarizes all activity over the last 24 hours:
 
 ```text
-Subject: Angalia Daily: 16 new jobs, 2 price drops
+Subject: Watchtower Daily: 16 new jobs, 2 price drops
 Summary: 18 total events recorded (16 new jobs, 2 price drops)
+```
+
+---
+
+## Sample Item JSON Outputs
+
+All scraped items extend `AngaliaItem` and provide SHA-256 `content_hash` fingerprints and serialized ISO timestamps:
+
+### Sample Job Listing (`JobItem`):
+```json
+{
+  "source": "brightermonday",
+  "external_id": "senior-python-engineer-101",
+  "url": "https://www.brightermonday.com/jobs/senior-python-engineer-101",
+  "scraped_at": "2026-10-08T08:00:00",
+  "content_hash": "a4f89d38c11e74b5bc314275069be34fa09f6e3557e5b602120019fa7918a20e",
+  "title": "Senior Python Engineer",
+  "company": "Safaricom PLC",
+  "location": "Nairobi, Kenya",
+  "job_type": "Full Time",
+  "salary": "KES 250,000 - 350,000",
+  "posted_at": "2026-10-07T09:30:00",
+  "description_snippet": "We are seeking a Senior Python Engineer to design and scale event-driven distributed systems across Africa."
+}
+```
+
+### Sample Product Listing (`ProductItem`):
+```json
+{
+  "source": "jumia",
+  "external_id": "phone-iphone-13-pro-max-512gb-blue-5555555",
+  "url": "https://www.jumia.co.ke/p/phone-iphone-13-pro-max-512gb-blue-5555555",
+  "scraped_at": "2026-10-08T08:00:00",
+  "content_hash": "c33b708d748fba8140409a82613e54b2a382e75e9cbdbbf69caee74681320efb",
+  "name": "Apple iPhone 13 Pro Max - 512GB - Sierra Blue",
+  "price": 149999.0,
+  "currency": "KES",
+  "in_stock": true,
+  "rating": 4.6
+}
 ```
 
 ---
@@ -225,7 +286,7 @@ Summary: 18 total events recorded (16 new jobs, 2 price drops)
 ## Project Directory Structure
 
 ```text
-angalia-scraper/
+watchtower-scraper/
 ├── .github/
 │   └── workflows/
 │       └── ci.yml               # GitHub Actions CI workflow (lint + test)
@@ -283,8 +344,8 @@ angalia-scraper/
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/yourorg/angalia-scraper.git
-   cd angalia-scraper
+   git clone https://github.com/yourorg/watchtower-scraper.git
+   cd watchtower-scraper
    ```
 
 2. **Set up virtual environment & install dependencies**:
@@ -364,11 +425,26 @@ angalia-scraper/
 
 *\*When notification credentials are omitted, the application logs a clean warning and skips dispatch without crashing.*
 
+### E-Commerce Watchlist Configuration (`config/watchlist.yaml`)
+
+Product spiders (`jumia` and `kilimall`) monitor targeted product URLs specified in `config/watchlist.yaml`:
+
+```yaml
+jumia:
+  - https://www.jumia.co.ke/p/phone-iphone-13-pro-max-512gb-blue-5555555
+  - https://www.jumia.co.ke/p/smart-tv-55-inch-samsung-123456
+  - https://www.jumia.co.ke/p/laptop-dell-xps-13-789012
+kilimall:
+  - https://www.kilimall.co.ke/p/iphone-13-pro-max-512gb-blue-111111
+  - https://www.kilimall.co.ke/p/sony-55-inch-smart-tv-222222
+  - https://www.kilimall.co.ke/p/dell-xps-13-laptop-333333
+```
+
 ---
 
 ## Extensibility: Adding a New Spider
 
-Follow these 6 steps to add a new website to Angalia Scraper:
+Follow these 6 steps to add a new website to Watchtower Scraper:
 
 ### 1. Create the Spider
 Create `angalia/spiders/<site_name>.py`:
@@ -444,6 +520,41 @@ pytest -v --cov=angalia
 # Run code linter
 ruff check .
 ```
+
+---
+
+## GitHub Setup & Publication Guide
+
+Follow these steps to publish this repository to your personal or organization GitHub account:
+
+### 1. Initialize & Link GitHub Remote
+Create a new repository named `watchtower-scraper` on [GitHub](https://github.com/new) (leave "Initialize with README" unchecked). Then connect your local repository:
+
+```bash
+# Add your GitHub remote
+git remote add origin https://github.com/<your-username>/watchtower-scraper.git
+
+# Set default branch to main or master
+git branch -M main
+
+# Push code and history to GitHub
+git push -u origin main
+```
+
+### 2. Configure GitHub Actions Secrets
+In your GitHub repository, navigate to **Settings** → **Secrets and variables** → **Actions** and add the following repository secrets for automated testing and notification dispatch:
+
+| Secret Name | Description |
+| :--- | :--- |
+| `TELEGRAM_BOT_TOKEN` | Bot API token generated by Telegram's [@BotFather](https://t.me/BotFather). |
+| `TELEGRAM_CHAT_ID` | Numerical Chat or Channel ID where alerts will be dispatched. |
+| `SENDGRID_API_KEY` | SendGrid API key with Mail Send permissions. |
+
+### 3. Continuous Integration Verification
+Every push and pull request triggers [`.github/workflows/ci.yml`](.github/workflows/ci.yml) which executes:
+- Matrix tests across Python **3.11** and **3.12**.
+- Fast code hygiene validation via `ruff check .`.
+- Full test suite via `pytest -v` (35 offline unit tests with 100% pass guarantee).
 
 ---
 
