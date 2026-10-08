@@ -139,7 +139,7 @@ Watchtower Scraper is strictly engineered to be a respectful, non-disruptive cit
 1. **`robots.txt` Adherence**: Honored strictly by default on all targets (`ROBOTSTXT_OBEY = True`).
 2. **Strict Concurrency Limits**: Capped to **1 concurrent request per domain** (`CONCURRENT_REQUESTS_PER_DOMAIN = 1`).
 3. **Adaptive AutoThrottle**: Measures web server response latencies and dynamically adjusts delay with a minimum 2.0-second delay between requests (`DOWNLOAD_DELAY = 2`).
-4. **Transparent User-Agent**: Identifies the crawler responsibly (`WatchtowerScraper/1.0 (+https://github.com/yourorg/watchtower-scraper; ethical-bot)`).
+4. **Transparent User-Agent**: Identifies the crawler responsibly (`WatchtowerScraper/1.0 (+https://github.com/crnjihia/watchtower-scraper; ethical-bot)`).
 5. **Public Data Only**: Monitors publicly discoverable catalog pages and listings; accesses no restricted, gated, or personal account data.
 
 | Target Domain | Concurrent Cap | Static Delay | AutoThrottle Target | Proxy Support |
@@ -344,7 +344,7 @@ watchtower-scraper/
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/yourorg/watchtower-scraper.git
+   git clone https://github.com/crnjihia/watchtower-scraper.git
    cd watchtower-scraper
    ```
 
@@ -532,7 +532,7 @@ Create a new repository named `watchtower-scraper` on [GitHub](https://github.co
 
 ```bash
 # Add your GitHub remote
-git remote add origin https://github.com/<your-username>/watchtower-scraper.git
+git remote add origin https://github.com/crnjihia/watchtower-scraper.git
 
 # Set default branch to main or master
 git branch -M main
