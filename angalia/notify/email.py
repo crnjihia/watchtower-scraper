@@ -8,14 +8,14 @@ from jinja2 import Template
 logger = structlog.get_logger(__name__)
 
 SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY")
-FROM_EMAIL = os.getenv("EMAIL_FROM", "alerts@angalia.io")
+FROM_EMAIL = os.getenv("EMAIL_FROM", "alerts@watchtower.io")
 TO_EMAIL = os.getenv("EMAIL_TO", "user@example.com")
 
 HTML_TEMPLATE = """<!doctype html>
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Angalia Daily Digest</title>
+  <title>Watchtower Daily Digest</title>
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; margin: 20px; color: #333; }
     h2 { color: #1a365d; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; }
@@ -35,7 +35,7 @@ HTML_TEMPLATE = """<!doctype html>
   </style>
 </head>
 <body>
-  <h2>Angalia Daily Digest — {{ date }}</h2>
+  <h2>Watchtower Daily Digest — {{ date }}</h2>
   <p class="summary"><strong>Summary:</strong> {{ summary }}</p>
   <table>
     <thead>
@@ -123,7 +123,7 @@ def build_subject_and_summary(events: list[dict[str, Any]]) -> tuple[str, str]:
     else:
         desc = ", ".join(parts)
 
-    subject = f"Angalia Daily: {desc}"
+    subject = f"Watchtower Daily: {desc}"
     summary = f"{len(events)} total events recorded ({desc})"
     return subject, summary
 

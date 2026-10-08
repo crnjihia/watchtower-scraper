@@ -102,7 +102,7 @@ def test_render_email_html_and_subject():
     ]
 
     subject, summary = build_subject_and_summary(events)
-    assert "Angalia Daily:" in subject
+    assert "Watchtower Daily:" in subject
     assert "1 new job" in subject
     assert "1 price drop" in subject
 

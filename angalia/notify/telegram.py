@@ -52,7 +52,7 @@ def format_event(event: dict[str, Any]) -> str:
     }
     ev_type = event.get("type", "UPDATED")
     emoji = emoji_map.get(ev_type, "🔔")
-    source_name = str(event.get("source", "angalia")).title()
+    source_name = str(event.get("source", "watchtower")).title()
     url = event.get("url", "#")
     item_name = _get_item_display_name(event)
 
@@ -200,7 +200,7 @@ async def send_telegram_alerts(events: list[Any], check_dedup: bool = True) -> i
 
     tasks = []
     for src, lines in grouped.items():
-        header = f"📢 *Angalia Alert — {src.upper()}*\n\n"
+        header = f"📢 *Watchtower Alert — {src.upper()}*\n\n"
         body = "\n".join(lines)
         tasks.append(_send_message(header + body))
 
