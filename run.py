@@ -210,7 +210,12 @@ def cmd_demo(args):
 
 
 def main():
+    from angalia import __version__
+
     parser = argparse.ArgumentParser(description="Watchtower Scraper Management CLI")
+    parser.add_argument(
+        "-v", "--version", action="version", version=f"watchtower-scraper {__version__}"
+    )
     subparsers = parser.add_subparsers(dest="command", help="Sub-command to execute")
 
     # status

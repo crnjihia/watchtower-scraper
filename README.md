@@ -6,6 +6,7 @@
   <img src="https://img.shields.io/badge/Celery-5.4%2B-37814A?style=for-the-badge&logo=celery&logoColor=white" alt="Celery" />
   <img src="https://img.shields.io/badge/SQLite-SQLAlchemy_2.0-003B57?style=for-the-badge&logo=sqlite&logoColor=white" alt="SQLite" />
   <img src="https://img.shields.io/badge/Tests-35%20Passed-brightgreen?style=for-the-badge" alt="Tests" />
+  <img src="https://img.shields.io/badge/GHCR-Package-2088FF?style=for-the-badge&logo=github&logoColor=white" alt="GHCR Package" />
   <img src="https://img.shields.io/badge/License-MIT-blue?style=for-the-badge" alt="License: MIT" />
 </p>
 
@@ -289,9 +290,12 @@ All scraped items extend `AngaliaItem` and provide SHA-256 `content_hash` finger
 watchtower-scraper/
 ├── .github/
 │   └── workflows/
-│       └── ci.yml               # GitHub Actions CI workflow (lint + test)
+│       ├── ci.yml               # GitHub Actions CI workflow (lint + test)
+│       ├── docker-publish.yml   # Multi-arch GHCR image publication workflow
+│       ├── pages.yml            # GitHub Pages automated deployment workflow
+│       └── release.yml          # GitHub Release workflow with sdist/wheel assets
 ├── angalia/
-│   ├── __init__.py
+│   ├── __init__.py              # Package metadata (__version__ = "0.1.0")
 │   ├── __main__.py              # Package CLI entrypoint (python -m angalia)
 │   ├── celery_app.py            # Celery app configuration & beat schedules
 │   ├── items.py                 # Dataclasses (JobItem, ProductItem, content_hash)
@@ -317,6 +321,9 @@ watchtower-scraper/
 ├── config/
 │   └── watchlist.yaml           # E-commerce target product URL watchlist
 ├── docs/
+│   ├── app.js                   # Interactive telemetry, terminal & feed logic
+│   ├── index.html               # Live status dashboard & documentation app
+│   ├── styles.css               # Ultra-modern dark theme stylesheet
 │   └── images/
 │       └── cli-status.png       # CLI status screenshot
 ├── tests/
@@ -327,12 +334,15 @@ watchtower-scraper/
 │   └── test_spiders.py          # Unit tests for spider parsing logic
 ├── .env.example                 # Template for required environment variables
 ├── .gitignore                   # Clean Git ignore rules (ignores DB & caches)
-├── docker-compose.yml           # Redis, Celery worker, and Celery beat setup
-├── Dockerfile                   # Production container definition
-├── Makefile                     # Developer command shortcuts
+├── CHANGELOG.md                 # Keep a Changelog semver release notes
+├── docker-compose.yml           # Redis, Celery worker, and Celery beat setup (local build)
+├── docker-compose.ghcr.yml      # Redis, Celery worker, and Beat setup (GHCR image package)
+├── Dockerfile                   # Multi-stage production container with OCI labels
+├── entrypoint.sh                # Flexible entrypoint for worker, beat, and CLI runner
+├── Makefile                     # Developer command shortcuts (build, test, release)
 ├── pyproject.toml               # PEP 621 packaging and dependency metadata
 ├── README.md                    # Project documentation
-├── run.py                       # Top-level application CLI runner
+├── run.py                       # Top-level application CLI runner (-v, status, crawl...)
 └── scrapy.cfg                   # Scrapy project configuration
 ```
 
@@ -403,6 +413,52 @@ watchtower-scraper/
    ```bash
    docker-compose down
    ```
+
+---
+
+### Option C: GitHub Container Registry (GHCR) Package
+
+The production container is automatically built, multi-arch compiled (`linux/amd64`, `linux/arm64`), and published to the GitHub Container Registry:
+
+```bash
+docker pull ghcr.io/crnjihia/watchtower-scraper:latest
+```
+
+#### 1. Instant One-Liner Execution via GHCR
+
+Run any unified CLI command or scraper task directly through the container:
+
+```bash
+# Check database status
+docker run --rm -v $(pwd)/data:/app/data ghcr.io/crnjihia/watchtower-scraper:latest status
+
+# Run a quick crawl (e.g. MyJobMag with 5 items limit)
+docker run --rm -v $(pwd)/data:/app/data ghcr.io/crnjihia/watchtower-scraper:latest crawl myjobmag --limit 5
+
+# Preview change alerts (dry-run)
+docker run --rm -v $(pwd)/data:/app/data ghcr.io/crnjihia/watchtower-scraper:latest alerts --dry-run
+
+# Run full end-to-end demo
+docker run --rm -v $(pwd)/data:/app/data ghcr.io/crnjihia/watchtower-scraper:latest demo
+
+# Execute automated test suite inside container
+docker run --rm ghcr.io/crnjihia/watchtower-scraper:latest pytest -v
+```
+
+#### 2. Run Background Worker & Beat using GHCR Compose
+
+Deploy the complete Redis + Celery Worker + Beat scheduler stack using the pre-built GHCR image without having to build locally:
+
+```bash
+# Start background worker and scheduler
+docker-compose -f docker-compose.ghcr.yml up -d
+
+# Inspect live telemetry
+docker-compose -f docker-compose.ghcr.yml logs -f
+
+# Terminate
+docker-compose -f docker-compose.ghcr.yml down
+```
 
 ---
 
@@ -556,8 +612,28 @@ Every push and pull request triggers [`.github/workflows/ci.yml`](.github/workfl
 - Fast code hygiene validation via `ruff check .`.
 - Full test suite via `pytest -v` (35 offline unit tests with 100% pass guarantee).
 
+### 4. Creating Versioned Releases
+This repository uses [Keep a Changelog](CHANGELOG.md) and [Semantic Versioning](https://semver.org). Pushing a version tag triggers [`.github/workflows/release.yml`](.github/workflows/release.yml) and [`.github/workflows/docker-publish.yml`](.github/workflows/docker-publish.yml) to automatically:
+1. Build Python wheels (`.whl`) and source distributions (`.tar.gz`).
+2. Generate cryptographic SHA-256 checksums (`SHA256SUMS.txt`).
+3. Parse and extract release notes from [CHANGELOG.md](CHANGELOG.md).
+4. Create the official GitHub Release with attached assets.
+5. Multi-arch compile (`linux/amd64`, `linux/arm64`) and publish the tagged container image to the GitHub Container Registry (`ghcr.io/crnjihia/watchtower-scraper:v0.1.0`).
+
+To tag and trigger a new release:
+```bash
+# Using Makefile shortcut
+make tag TAG=v0.1.0
+git push origin v0.1.0
+
+# Or using standard git commands
+git tag -a v0.1.0 -m "Release v0.1.0"
+git push origin v0.1.0
+```
+
 ---
 
 ## License
 
 This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
+

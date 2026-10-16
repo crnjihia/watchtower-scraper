@@ -1,0 +1,38 @@
+version: "3.9"
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: watchtower_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  worker:
+    image: ghcr.io/crnjihia/watchtower-scraper:latest
+    container_name: watchtower_worker
+    restart: unless-stopped
+    depends_on:
+      - redis
+    env_file:
+      - .env.example
+    command: ["worker"]
+    volumes:
+      - ./data:/app/data
+
+  beat:
+    image: ghcr.io/crnjihia/watchtower-scraper:latest
+    container_name: watchtower_beat
+    restart: unless-stopped
+    depends_on:
+      - redis
+    env_file:
+      - .env.example
+    command: ["beat"]
+    volumes:
+      - ./data:/app/data
+
+volumes:
+  redis_data:

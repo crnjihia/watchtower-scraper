@@ -12,25 +12,27 @@ services:
 
   worker:
     build: .
+    image: watchtower-scraper:latest
     container_name: watchtower_worker
     restart: unless-stopped
     depends_on:
       - redis
     env_file:
       - .env.example
-    command: celery -A angalia.celery_app.celery_app worker --loglevel=info
+    command: ["worker"]
     volumes:
       - ./data:/app/data
 
   beat:
     build: .
+    image: watchtower-scraper:latest
     container_name: watchtower_beat
     restart: unless-stopped
     depends_on:
       - redis
     env_file:
       - .env.example
-    command: celery -A angalia.celery_app.celery_app beat --loglevel=info
+    command: ["beat"]
     volumes:
       - ./data:/app/data
 

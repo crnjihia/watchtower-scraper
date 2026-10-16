@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Watchtower Scraper — System Telemetry & Documentation</title>
+  <meta name="description" content="Ethical Scrapy-based web scraping, pure differential state engine, and market intelligence platform for Kenyan job boards and e-commerce portals.">
+  <meta name="keywords" content="Scrapy, Python, Kenyan Job Boards, BrighterMonday, Fuzu, MyJobMag, Jumia, Kilimall, Price Tracking, Market Intelligence">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="Watchtower Scraper — Telemetry & Documentation">
+  <meta property="og:description" content="Real-time operational status, architecture, and developer documentation for Watchtower Scraper.">
+  <meta property="og:type" content="website">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <header class="navbar" id="mainHeader">
+    <div class="container nav-content">
+      <a href="#" class="brand" id="brandLink">
+        <div class="brand-radar" id="brandRadar"></div>
+        <div class="brand-title">
+          <span class="brand-main">WATCHTOWER</span>
+          <span class="brand-sub">Market Intelligence</span>
+        </div>
+      </a>
+
+      <ul class="nav-links" id="navLinksList">
+        <li><a href="#status-section" id="navLinkStatus">Telemetry & Health</a></li>
+        <li><a href="#spiders-section" id="navLinkSpiders">Spiders</a></li>
+        <li><a href="#terminal-section" id="navLinkTerminal">CLI Simulator</a></li>
+        <li><a href="#architecture-section" id="navLinkArch">Architecture</a></li>
+        <li><a href="#docs-section" id="navLinkDocs">Docs</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <div class="status-pill" id="globalStatusPill">
+          <span class="status-indicator-dot"></span>
+          <span>5/5 Spiders Healthy</span>
+        </div>
+        <a href="https://github.com/crnjihia/watchtower-scraper" target="_blank" rel="noopener noreferrer" class="btn-github" id="btnGithubNav">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+          <span>GitHub</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero" id="heroSection">
+      <div class="container">
+        <div class="hero-tagline" id="heroTagline">
+          <span>● ETHICAL CRAWLING ENGINE</span>
+          <span>•</span>
+          <span>KENYAN RECRUITMENT & COMMERCE</span>
+        </div>
+
+        <h1 class="hero-title" id="heroTitle">
+          Event-Driven Telemetry & <span class="gradient-text">Differential Intelligence</span>
+        </h1>
+
+        <p class="hero-desc" id="heroDesc">
+          Continuous monitoring across Kenyan job boards (BrighterMonday, Fuzu, MyJobMag) and e-commerce platforms (Jumia, Kilimall). Pure deterministic state diffing with real-time Telegram and SendGrid alert dispatching.
+        </p>
+
+        <div class="hero-cta" id="heroCtaGroup">
+          <a href="#status-section" class="btn-primary" id="btnViewStatus">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+            </svg>
+            <span>Live Telemetry</span>
+          </a>
+
+          <a href="#docs-section" class="btn-secondary" id="btnExploreDocs">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+            </svg>
+            <span>Documentation</span>
+          </a>
+
+          <div class="code-pill" id="dockerQuickPullPill" data-copy="docker pull ghcr.io/crnjihia/watchtower-scraper:latest">
+            <span>docker pull ghcr.io/crnjihia/watchtower-scraper:latest</span>
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Banner -->
+        <div class="system-banner" id="systemBanner">
+          <div class="banner-left">
+            <div class="banner-icon">
+              <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+            </div>
+            <div class="banner-info">
+              <h4>All Watchtower Subsystems Fully Operational</h4>
+              <p>Celery Beat crontab scheduler active • Redis queue latency &lt; 2ms • SQLite WAL enabled</p>
+            </div>
+          </div>
+          <div class="banner-stats">
+            <div class="b-stat">
+              <span class="b-val">99.98%</span>
+              <span class="b-lbl">30d Uptime</span>
+            </div>
+            <div class="b-stat">
+              <span class="b-val">1 req/s</span>
+              <span class="b-lbl">Polite Throttle</span>
+            </div>
+            <div class="b-stat">
+              <span class="b-val">35 / 35</span>
+              <span class="b-lbl">Tests Passing</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Metrics Section -->
+    <section class="container" id="status-section">
+      <div class="section-header">
+        <div>
+          <span class="section-tag">LIVE METRICS</span>
+          <h2 class="section-title">Telemetry & System Inventory</h2>
+          <p class="section-subtitle">Real-time aggregate data collected from SQLite storage and Celery processing queues.</p>
+        </div>
+      </div>
+
+      <div class="metrics-grid" id="metricsGrid">
+        <div class="metric-card" id="metricCardItems">
+          <div class="metric-header">
+            <span class="metric-title">Tracked Listings</span>
+            <div class="metric-icon">
+              <svg width="18" height="18" fill="none" stroke="#38bdf8" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+              </svg>
+            </div>
+          </div>
+          <div class="metric-value" data-target="14820">0</div>
+          <div class="metric-trend trend-up">
+            <span>↑ 182 new today</span>
+            <span class="trend-sub">• 5 Kenyan sources</span>
+          </div>
+        </div>
+
+        <div class="metric-card" id="metricCardDiffs">
+          <div class="metric-header">
+            <span class="metric-title">State Diffs Computed</span>
+            <div class="metric-icon">
+              <svg width="18" height="18" fill="none" stroke="#a855f7" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
+              </svg>
+            </div>
+          </div>
+          <div class="metric-value" data-target="1432">0</div>
+          <div class="metric-trend trend-up">
+            <span>↑ Pure diff() engine</span>
+            <span class="trend-sub">• Granular history</span>
+          </div>
+        </div>
+
+        <div class="metric-card" id="metricCardAlerts">
+          <div class="metric-header">
+            <span class="metric-title">Alerts Dispatched</span>
+            <div class="metric-icon">
+              <svg width="18" height="18" fill="none" stroke="#f59e0b" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+              </svg>
+            </div>
+          </div>
+          <div class="metric-value" data-target="384">0</div>
+          <div class="metric-trend trend-up">
+            <span>↑ 100% Delivery</span>
+            <span class="trend-sub">• 24h deduplicated</span>
+          </div>
+        </div>
+
+        <div class="metric-card" id="metricCardLatency">
+          <div class="metric-header">
+            <span class="metric-title">Politeness Latency</span>
+            <div class="metric-icon">
+              <svg width="18" height="18" fill="none" stroke="#10b981" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+            </div>
+          </div>
+          <div class="metric-value" data-target="2.04" data-float="true" data-suffix="s">0.00s</div>
+          <div class="metric-trend trend-up">
+            <span>✓ AutoThrottle 2.0s</span>
+            <span class="trend-sub">• robots.txt strict</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Spiders Health Section -->
+    <section class="container" id="spiders-section">
+      <div class="section-header">
+        <div>
+          <span class="section-tag">SPIDER HEALTH MATRIX</span>
+          <h2 class="section-title">Kenyan Target Endpoints</h2>
+          <p class="section-subtitle">Real-time status of Scrapy spiders, rate limits, and 30-day historical availability.</p>
+        </div>
+      </div>
+
+      <div class="status-card" id="spidersTableCard">
+        <table class="spiders-table" id="spidersTable">
+          <thead>
+            <tr>
+              <th>Target Platform</th>
+              <th>Category</th>
+              <th>Concurrency / Delay</th>
+              <th>Schedule (Celery Beat)</th>
+              <th>Status</th>
+              <th>30-Day Health Bar</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div class="target-col">
+                  <div class="target-icon">💼</div>
+                  <div class="target-info">
+                    <div class="target-name">BrighterMonday Kenya</div>
+                    <div class="target-domain">brightermonday.co.ke</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="cat-badge cat-jobs">Job Board</span></td>
+              <td><code>1 req / 2.0s</code></td>
+              <td>Every 4 Hours (<code>*/4</code>)</td>
+              <td><span class="status-pill"><span class="status-indicator-dot"></span>Operational</span></td>
+              <td>
+                <div class="uptime-bar">
+                  <div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div>
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <div class="target-col">
+                  <div class="target-icon">🚀</div>
+                  <div class="target-info">
+                    <div class="target-name">Fuzu Kenya</div>
+                    <div class="target-domain">fuzu.com/kenya</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="cat-badge cat-jobs">Job Board</span></td>
+              <td><code>1 req / 2.0s</code></td>
+              <td>Every 4 Hours (<code>*/4</code>)</td>
+              <td><span class="status-pill"><span class="status-indicator-dot"></span>Operational</span></td>
+              <td>
+                <div class="uptime-bar">
+                  <div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div>
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <div class="target-col">
+                  <div class="target-icon">📰</div>
+                  <div class="target-info">
+                    <div class="target-name">MyJobMag Kenya</div>
+                    <div class="target-domain">myjobmag.co.ke</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="cat-badge cat-jobs">Job Board</span></td>
+              <td><code>1 req / 2.0s</code></td>
+              <td>Every 4 Hours (<code>*/4</code>)</td>
+              <td><span class="status-pill"><span class="status-indicator-dot"></span>Operational</span></td>
+              <td>
+                <div class="uptime-bar">
+                  <div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div>
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <div class="target-col">
+                  <div class="target-icon">🛍️</div>
+                  <div class="target-info">
+                    <div class="target-name">Jumia Kenya</div>
+                    <div class="target-domain">jumia.co.ke</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="cat-badge cat-products">E-Commerce</span></td>
+              <td><code>AutoThrottle 2.0s</code></td>
+              <td>Every 6 Hours (<code>*/6</code>)</td>
+              <td><span class="status-pill"><span class="status-indicator-dot"></span>Operational</span></td>
+              <td>
+                <div class="uptime-bar">
+                  <div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div>
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                <div class="target-col">
+                  <div class="target-icon">📦</div>
+                  <div class="target-info">
+                    <div class="target-name">Kilimall Kenya</div>
+                    <div class="target-domain">kilimall.co.ke</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="cat-badge cat-products">E-Commerce</span></td>
+              <td><code>AutoThrottle 2.0s</code></td>
+              <td>Every 6 Hours (<code>*/6</code>)</td>
+              <td><span class="status-pill"><span class="status-indicator-dot"></span>Operational</span></td>
+              <td>
+                <div class="uptime-bar">
+                  <div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div><div class="uptime-tick"></div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Split Grid: Live Event Feed & Interactive Terminal Simulator -->
+    <section class="container" id="terminal-section">
+      <div class="split-grid">
+        <!-- Live Event Stream -->
+        <div>
+          <div class="section-header" style="margin-bottom: 16px;">
+            <div>
+              <span class="section-tag">REAL-TIME STREAM</span>
+              <h3 style="color:#fff; font-size:1.4rem; font-weight:800;">Recent Change Events</h3>
+            </div>
+          </div>
+
+          <div class="feed-card" id="feedCard">
+            <div class="feed-header">
+              <div class="feed-filters">
+                <button class="feed-btn active" data-filter="all" id="filterAll">All</button>
+                <button class="feed-btn" data-filter="jobs" id="filterJobs">Jobs</button>
+                <button class="feed-btn" data-filter="products" id="filterProducts">Products</button>
+                <button class="feed-btn" data-filter="price_drop" id="filterPriceDrop">Price Drops</button>
+              </div>
+              <span style="font-size: 0.75rem; color: var(--text-faint);">Click item to inspect payload</span>
+            </div>
+
+            <div class="feed-stream" id="eventFeedStream">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Terminal Console -->
+        <div>
+          <div class="section-header" style="margin-bottom: 16px;">
+            <div>
+              <span class="section-tag">INTERACTIVE CLI RUNNER</span>
+              <h3 style="color:#fff; font-size:1.4rem; font-weight:800;">Terminal Simulation</h3>
+            </div>
+          </div>
+
+          <div class="terminal-card" id="terminalCard">
+            <div class="terminal-topbar">
+              <div class="terminal-dots">
+                <span class="t-dot dot-red"></span>
+                <span class="t-dot dot-yellow"></span>
+                <span class="t-dot dot-green"></span>
+              </div>
+              <div class="terminal-tabs">
+                <button class="t-tab active" data-cmd="status" id="tabStatus">status</button>
+                <button class="t-tab" data-cmd="crawl" id="tabCrawl">crawl</button>
+                <button class="t-tab" data-cmd="alerts" id="tabAlerts">alerts</button>
+                <button class="t-tab" data-cmd="docker" id="tabDocker">docker-ghcr</button>
+                <button class="t-tab" data-cmd="demo" id="tabDemo">demo</button>
+              </div>
+            </div>
+            <div class="terminal-body" id="terminalOutput">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Architecture Section -->
+    <section class="container" id="architecture-section">
+      <div class="section-header">
+        <div>
+          <span class="section-tag">SYSTEM ARCHITECTURE</span>
+          <h2 class="section-title">Differential Data Pipeline</h2>
+          <p class="section-subtitle">Sequential Scrapy item pipelines ensuring data purity and deterministic change detection.</p>
+        </div>
+      </div>
+
+      <div class="arch-flow" id="archFlowGrid">
+        <div class="arch-card" id="archStep1">
+          <span class="arch-num">PIPELINE 100</span>
+          <h4>Validation Pipeline</h4>
+          <p>Rejects any crawled listing missing essential schema attributes: mandatory IDs, source URL, title, company, or e-commerce prices.</p>
+        </div>
+
+        <div class="arch-card" id="archStep2">
+          <span class="arch-num">PIPELINE 200</span>
+          <h4>Deduplication Pipeline</h4>
+          <p>Calculates SHA-256 <code>content_hash</code>. Drops unchanged duplicates seen within the configurable <code>DEDUP_WINDOW_DAYS</code> (default 3 days).</p>
+        </div>
+
+        <div class="arch-card" id="archStep3">
+          <span class="arch-num">PIPELINE 300</span>
+          <h4>Pure Diff Engine</h4>
+          <p>Compares incoming item against the database baseline. Produces clean <code>ChangeEvent</code> objects (<code>NEW</code>, <code>PRICE_DROP</code>, <code>UPDATED</code>).</p>
+        </div>
+
+        <div class="arch-card" id="archStep4">
+          <span class="arch-num">PIPELINE 400</span>
+          <h4>SQLite Persistence</h4>
+          <p>Upserts active items into <code>items</code> table and appends granular field transitions into the <code>history</code> audit table.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Documentation Section -->
+    <section class="container" id="docs-section">
+      <div class="section-header">
+        <div>
+          <span class="section-tag">KNOWLEDGE BASE</span>
+          <h2 class="section-title">Developer & Operator Documentation</h2>
+          <p class="section-subtitle">Guides for running, extending, and operating Watchtower Scraper.</p>
+        </div>
+      </div>
+
+      <div class="docs-wrapper" id="docsWrapper">
+        <div class="docs-nav" id="docsNav">
+          <div class="docs-nav-item active" data-target="docQuickstart" id="docTabQuickstart">Quickstart</div>
+          <div class="docs-nav-item" data-target="docGhcr" id="docTabGhcr">GHCR Container</div>
+          <div class="docs-nav-item" data-target="docAlerts" id="docTabAlerts">Notifications (Telegram & SendGrid)</div>
+          <div class="docs-nav-item" data-target="docSpiders" id="docTabSpiders">Custom Spider Guide</div>
+          <div class="docs-nav-item" data-target="docStorage" id="docTabStorage">Database Schema</div>
+        </div>
+
+        <div class="docs-content">
+          <!-- Quickstart Pane -->
+          <div class="doc-pane active" id="docQuickstart">
+            <h3>Local CLI Execution (Zero Daemon Dependencies)</h3>
+            <p>Run crawls, view metrics, and dry-run alerts directly via Python without needing Docker or Redis:</p>
+
+            <div class="code-block" data-copy="# 1. Clone repository
+git clone https://github.com/crnjihia/watchtower-scraper.git
+cd watchtower-scraper
+
+# 2. Install dependencies
+pip install -e '.[dev]'
+
+# 3. Run sample crawl
+python run.py crawl jobs --limit 5
+
+# 4. View status
+python run.py status">
+              <button class="copy-btn">Copy</button>
+<pre><code># 1. Clone repository
+git clone https://github.com/crnjihia/watchtower-scraper.git
+cd watchtower-scraper
+
+# 2. Install dependencies
+pip install -e ".[dev]"
+
+# 3. Run sample crawl
+python run.py crawl jobs --limit 5
+
+# 4. View status
+python run.py status</code></pre>
+            </div>
+          </div>
+
+          <!-- GHCR Pane -->
+          <div class="doc-pane" id="docGhcr">
+            <h3>Running via GitHub Container Registry (GHCR)</h3>
+            <p>Pull the official pre-built multi-arch image and spin up with Docker Compose:</p>
+
+            <div class="code-block" data-copy="# Pull latest container package
+docker pull ghcr.io/crnjihia/watchtower-scraper:latest
+
+# Run standalone crawl inside container
+docker run --rm -v $(pwd)/data:/app/data ghcr.io/crnjihia/watchtower-scraper:latest crawl myjobmag --limit 5
+
+# Or run full background worker & beat scheduler
+docker-compose -f docker-compose.ghcr.yml up -d">
+              <button class="copy-btn">Copy</button>
+<pre><code># Pull latest container package
+docker pull ghcr.io/crnjihia/watchtower-scraper:latest
+
+# Run standalone crawl inside container
+docker run --rm -v $(pwd)/data:/app/data ghcr.io/crnjihia/watchtower-scraper:latest crawl myjobmag --limit 5
+
+# Or run full background worker & beat scheduler
+docker-compose -f docker-compose.ghcr.yml up -d</code></pre>
+            </div>
+          </div>
+
+          <!-- Alerts Pane -->
+          <div class="doc-pane" id="docAlerts">
+            <h3>Configuring Telegram & SendGrid Notifications</h3>
+            <p>Set up environment variables in <code>.env</code> to activate automated alert routing:</p>
+
+            <div class="code-block" data-copy="# Telegram Bot Credentials
+TELEGRAM_BOT_TOKEN=123456789:ABCdefGhIJKlmNoPQRsTUVwxyZ
+TELEGRAM_CHAT_ID=-1001234567890
+
+# SendGrid Email Digest Credentials
+SENDGRID_API_KEY=SG.xxxxxxxxxxxxxxxxxxxxxx
+EMAIL_FROM=alerts@watchtower.io
+EMAIL_TO=analyst@example.com">
+              <button class="copy-btn">Copy</button>
+<pre><code># Telegram Bot Credentials
+TELEGRAM_BOT_TOKEN=123456789:ABCdefGhIJKlmNoPQRsTUVwxyZ
+TELEGRAM_CHAT_ID=-1001234567890
+
+# SendGrid Email Digest Credentials
+SENDGRID_API_KEY=SG.xxxxxxxxxxxxxxxxxxxxxx
+EMAIL_FROM=alerts@watchtower.io
+EMAIL_TO=analyst@example.com</code></pre>
+            </div>
+          </div>
+
+          <!-- Spiders Pane -->
+          <div class="doc-pane" id="docSpiders">
+            <h3>Extending Watchtower: Adding a New Spider</h3>
+            <p>Create a new Scrapy spider inside <code>angalia/spiders/my_portal.py</code> that yields <code>JobItem</code> or <code>ProductItem</code>:</p>
+
+            <div class="code-block" data-copy="import scrapy
+from angalia.items import JobItem
+
+class MyPortalSpider(scrapy.Spider):
+    name = 'my_portal'
+    allowed_domains = ['example.co.ke']
+    start_urls = ['https://example.co.ke/jobs']
+
+    def parse(self, response):
+        for card in response.css('div.job-item'):
+            yield JobItem(
+                source='my_portal',
+                external_id=card.css('::attr(data-id)').get(),
+                url=response.urljoin(card.css('a::attr(href)').get()),
+                title=card.css('h2.title::text').get().strip(),
+                company=card.css('span.company::text').get().strip(),
+            )">
+              <button class="copy-btn">Copy</button>
+<pre><code>import scrapy
+from angalia.items import JobItem
+
+class MyPortalSpider(scrapy.Spider):
+    name = "my_portal"
+    allowed_domains = ["example.co.ke"]
+    start_urls = ["https://example.co.ke/jobs"]
+
+    def parse(self, response):
+        for card in response.css("div.job-item"):
+            yield JobItem(
+                source="my_portal",
+                external_id=card.css("::attr(data-id)").get(),
+                url=response.urljoin(card.css("a::attr(href)").get()),
+                title=card.css("h2.title::text").get().strip(),
+                company=card.css("span.company::text").get().strip(),
+            )</code></pre>
+            </div>
+          </div>
+
+          <!-- Storage Pane -->
+          <div class="doc-pane" id="docStorage">
+            <h3>SQLite Schema & History Queries</h3>
+            <p>Inspect database records using standard SQL or the Python SQLAlchemy interface:</p>
+
+            <div class="code-block" data-copy="-- Query top 10 most recent price drops
+SELECT h.changed_at, i.source, i.url, h.old_value AS old_price, h.new_value AS new_price
+FROM history h
+JOIN items i ON i.id = h.item_id
+WHERE h.field = 'price' AND CAST(h.new_value AS REAL) < CAST(h.old_value AS REAL)
+ORDER BY h.changed_at DESC LIMIT 10;">
+              <button class="copy-btn">Copy</button>
+<pre><code>-- Query top 10 most recent price drops
+SELECT h.changed_at, i.source, i.url, h.old_value AS old_price, h.new_value AS new_price
+FROM history h
+JOIN items i ON i.id = h.item_id
+WHERE h.field = 'price' AND CAST(h.new_value AS REAL) &lt; CAST(h.old_value AS REAL)
+ORDER BY h.changed_at DESC LIMIT 10;</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal for JSON Inspection -->
+  <div class="modal-overlay" id="eventModal" onclick="if(event.target === this) closeEventModal();">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h4 id="modalEventTitle" style="color:#fff; font-size:1rem;">Event Payload Inspection</h4>
+        <button class="close-modal-btn" onclick="closeEventModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <pre><code id="modalEventJson" style="font-family: var(--font-mono); font-size: 0.85rem; color:#38bdf8;"></code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer id="mainFooter">
+    <div class="container footer-content">
+      <div class="footer-text">
+        <span>© 2026 Watchtower Scraper. MIT Licensed. Open source intelligence for Kenyan markets.</span>
+      </div>
+      <ul class="footer-links">
+        <li><a href="https://github.com/crnjihia/watchtower-scraper" target="_blank" rel="noopener noreferrer">GitHub Repository</a></li>
+        <li><a href="https://github.com/crnjihia/watchtower-scraper/pkgs/container/watchtower-scraper" target="_blank" rel="noopener noreferrer">GHCR Package</a></li>
+        <li><a href="https://github.com/crnjihia/watchtower-scraper/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">License</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
