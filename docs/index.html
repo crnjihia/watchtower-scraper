@@ -239,7 +239,7 @@
               </td>
               <td><span class="cat-badge cat-jobs">Job Board</span></td>
               <td><code>1 req / 2.0s</code></td>
-              <td>Every 4 Hours (<code>*/4</code>)</td>
+              <td>Every 15m (06:00–22:00 EAT)</td>
               <td><span class="status-pill"><span class="status-indicator-dot"></span>Operational</span></td>
               <td>
                 <div class="uptime-bar">
@@ -260,7 +260,7 @@
               </td>
               <td><span class="cat-badge cat-jobs">Job Board</span></td>
               <td><code>1 req / 2.0s</code></td>
-              <td>Every 4 Hours (<code>*/4</code>)</td>
+              <td>Every 15m (06:00–22:00 EAT)</td>
               <td><span class="status-pill"><span class="status-indicator-dot"></span>Operational</span></td>
               <td>
                 <div class="uptime-bar">
@@ -281,7 +281,7 @@
               </td>
               <td><span class="cat-badge cat-jobs">Job Board</span></td>
               <td><code>1 req / 2.0s</code></td>
-              <td>Every 4 Hours (<code>*/4</code>)</td>
+              <td>Every 15m (06:00–22:00 EAT)</td>
               <td><span class="status-pill"><span class="status-indicator-dot"></span>Operational</span></td>
               <td>
                 <div class="uptime-bar">
@@ -302,7 +302,7 @@
               </td>
               <td><span class="cat-badge cat-products">E-Commerce</span></td>
               <td><code>AutoThrottle 2.0s</code></td>
-              <td>Every 6 Hours (<code>*/6</code>)</td>
+              <td>Every 30 Minutes</td>
               <td><span class="status-pill"><span class="status-indicator-dot"></span>Operational</span></td>
               <td>
                 <div class="uptime-bar">
@@ -323,7 +323,7 @@
               </td>
               <td><span class="cat-badge cat-products">E-Commerce</span></td>
               <td><code>AutoThrottle 2.0s</code></td>
-              <td>Every 6 Hours (<code>*/6</code>)</td>
+              <td>Every 30 Minutes</td>
               <td><span class="status-pill"><span class="status-indicator-dot"></span>Operational</span></td>
               <td>
                 <div class="uptime-bar">
@@ -539,43 +539,43 @@ EMAIL_TO=analyst@example.com</code></pre>
 
           <!-- Spiders Pane -->
           <div class="doc-pane" id="docSpiders">
-            <h3>Extending Watchtower: Adding a New Spider</h3>
-            <p>Create a new Scrapy spider inside <code>angalia/spiders/my_portal.py</code> that yields <code>JobItem</code> or <code>ProductItem</code>:</p>
+            <h3>Extending Watchtower: Adding a New Spider (≤ 15 Lines)</h3>
+            <p>Create a new Scrapy spider inside <code>src/watchtower/spiders/my_portal.py</code> inheriting from <code>BaseSpider</code>:</p>
 
-            <div class="code-block" data-copy="import scrapy
-from angalia.items import JobItem
+            <div class="code-block" data-copy="from watchtower.spiders.base import BaseSpider
 
-class MyPortalSpider(scrapy.Spider):
+class MyPortalSpider(BaseSpider):
     name = 'my_portal'
     allowed_domains = ['example.co.ke']
     start_urls = ['https://example.co.ke/jobs']
 
     def parse(self, response):
-        for card in response.css('div.job-item'):
-            yield JobItem(
-                source='my_portal',
+        for card in response.css('.job-item'):
+            yield self.build_item(
+                site=self.name,
                 external_id=card.css('::attr(data-id)').get(),
                 url=response.urljoin(card.css('a::attr(href)').get()),
-                title=card.css('h2.title::text').get().strip(),
-                company=card.css('span.company::text').get().strip(),
+                title=card.css('.title::text').get(),
+                company=card.css('.company::text').get(),
+                category='Job',
             )">
               <button class="copy-btn">Copy</button>
-<pre><code>import scrapy
-from angalia.items import JobItem
+<pre><code>from watchtower.spiders.base import BaseSpider
 
-class MyPortalSpider(scrapy.Spider):
+class MyPortalSpider(BaseSpider):
     name = "my_portal"
     allowed_domains = ["example.co.ke"]
     start_urls = ["https://example.co.ke/jobs"]
 
     def parse(self, response):
-        for card in response.css("div.job-item"):
-            yield JobItem(
-                source="my_portal",
+        for card in response.css(".job-item"):
+            yield self.build_item(
+                site=self.name,
                 external_id=card.css("::attr(data-id)").get(),
                 url=response.urljoin(card.css("a::attr(href)").get()),
-                title=card.css("h2.title::text").get().strip(),
-                company=card.css("span.company::text").get().strip(),
+                title=card.css(".title::text").get(),
+                company=card.css(".company::text").get(),
+                category="Job",
             )</code></pre>
             </div>
           </div>

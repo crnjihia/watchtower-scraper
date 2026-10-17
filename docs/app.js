@@ -260,9 +260,9 @@ Starting crawl for: brighter_monday, fuzu, myjobmag (limit=5)
 --- Running spider: brighter_monday ---
 [scrapy.core.engine] INFO: Spider opened (brighter_monday)
 [scrapy.extensions.throttle] INFO: AutoThrottle active (delay=2.0s, target=1.0)
-[angalia.pipelines] INFO: dedup_item_passed (hash: 8f4d92a1...)
-[angalia.diff.engine] INFO: event_detected: NEW external_id='lead-cloud-architect-9921'
-[angalia.storage] INFO: sqlite_store_item_saved (id=14821)
+[watchtower.pipelines.normalize] INFO: normalized_item (url: https://...)
+[watchtower.pipelines.change_detect] INFO: change_detected: NEW_LISTING external_id='lead-cloud-architect-9921'
+[watchtower.pipelines.persist] INFO: item_persisted_and_snapshotted (id=14821)
 [scrapy.core.engine] INFO: Closing spider (closespider_itemcount)
 [scrapy.statscollectors] INFO: Dumping Scrapy stats:
     'item_scraped_count': 5,
@@ -307,8 +307,8 @@ Status                 : CONTAINER OPERATIONAL (Non-root user UID 1000)
 ============================================================
 
 1. Crawling sample listings from 'myjobmag'...
-[scrapy.core.engine] INFO: Spider opened (myjobmag)
-[angalia.pipelines] INFO: Validated JobItem: 'Database Administrator'
+[scrapy.core.engine] INFO: Spider opened (my_job_mag)
+[watchtower.pipelines.persist] INFO: Validated and stored item: 'Database Administrator'
 [scrapy.core.engine] INFO: Closing spider (closespider_itemcount=2)
 
 2. Database status after crawl:
