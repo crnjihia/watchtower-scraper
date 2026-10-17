@@ -10,44 +10,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0] - 2026-10-17
 
 ### Added
-- **Multi-Source Kenyan Spiders**:
-  - `brighter_monday`: Scrapes BrighterMonday Kenya job listings and details.
-  - `fuzu`: Scrapes Fuzu Kenya job board vacancies and employers.
-  - `myjobmag`: Scrapes MyJobMag Kenya job vacancies and descriptions.
-  - `jumia`: Monitors watchlist products, pricing, stock status, and ratings on Jumia Kenya.
-  - `kilimall`: Monitors watchlist products, pricing, and stock status on Kilimall Kenya.
-- **Pure Differential State Engine (`angalia/diff`)**:
-  - Deterministic `diff()` function emitting `NEW`, `REMOVED`, `PRICE_DROP`, `PRICE_RISE`, and `UPDATED` events without side-effects.
-- **Multi-Stage Scrapy Item Pipelines**:
-  - `ValidationPipeline`: Rejects listings missing mandatory schema attributes.
-  - `DeduplicationPipeline`: Filters duplicate items across runs via SHA-256 `content_hash` over a configurable lookback window.
-  - `DiffPipeline`: Automatically compares incoming listings against stored snapshots in SQLite.
-  - `SQLiteStorePipeline`: Persists state in `items` table and writes detailed field transitions into `history` table.
-- **Persistent Storage**:
-  - Thread-safe SQLAlchemy 2.0 SQLite schema (`items`, `history`, and `alerts_sent` deduplication table).
-- **Notification Services**:
-  - `telegram`: Asynchronous Telegram Bot broadcaster with rich Markdown formatting, emojis (`🆕`, `📉`, `📈`, `✏️`), and 24-hour deduplication.
-  - `email`: SendGrid daily HTML digest with Jinja2 templates and dynamic summary subjects.
-- **Background Orchestration**:
-  - Celery 5.4 + Redis Beat crontab scheduling:
-    - Jobs scraped every 4 hours (`0 */4 * * *`)
-    - Products scraped every 6 hours (`0 */6 * * *`)
-    - Telegram alerts drained every 5 minutes (`*/5 * * * *`)
-    - Daily email digest at 08:00 EAT (05:00 UTC)
-    - Weekly stale item cleanup on Sundays
-- **Unified Management CLI (`run.py`)**:
-  - Subcommands: `status`, `crawl`, `alerts`, `worker`, `beat`, `test`, `demo`, `--version`.
-- **GitHub Container Registry (GHCR) Package**:
-  - Multi-arch Docker build (`linux/amd64`, `linux/arm64`) with non-root security (`appuser` UID 1000).
-  - Flexible `entrypoint.sh` supporting Celery worker, beat, and CLI subcommands.
-  - Pre-configured `docker-compose.ghcr.yml` for zero-build deployment.
-- **Live Status & Documentation Dashboard (`docs/`)**:
-  - GitHub Pages application with real-time metrics, spider health matrix, live event feed, interactive CLI simulator, and architecture guides.
-- **Automated CI/CD**:
-  - `.github/workflows/ci.yml`: Automated testing and linting across Python 3.11 and 3.12.
-  - `.github/workflows/docker-publish.yml`: Automated GHCR package publishing on `main` and version tags (`v*`).
-  - `.github/workflows/pages.yml`: Automated GitHub Pages deployment from `docs/`.
-  - `.github/workflows/release.yml`: Automated GitHub release creation with wheel/sdist assets and SHA-256 checksums.
+- **Production Architecture & Packaging (`src/watchtower`)**:
+  - Clean modular architecture installed via `pyproject.toml` with strict typing and Pydantic v2 settings.
+  - JSON structured logging with contextual binding for spider names and execution run IDs via `structlog`.
+- **Target Spiders with Rate Limiting & Anti-Bot Protection**:
+  - `brighter_monday`: Crawls Kenyan job postings with salary, job-type, and location extraction.
+  - `fuzu`: Crawls Kenyan job vacancies with employer tracking and category mapping.
+  - `my_job_mag`: Crawls Kenyan job vacancies with contract type and posting dates.
+  - `jumia`: Monitors e-commerce product listings and prices on Jumia Kenya.
+  - `kilimall`: Monitors e-commerce product listings and prices on Kilimall Kenya.
+  - Built-in `BaseSpider` with AutoThrottle, randomized download delays, robots.txt obedience, and rotating User-Agents/Proxies.
+- **Pipelines & Change Detection**:
+  - `NormalizePipeline`: Sanitizes strings, normalizes diverse price formats to float KES, and parses ISO/relative timestamps.
+  - `ChangeDetectionPipeline`: Pure diff engine detecting `new_listing`, `price_drop`, `price_increase`, `removed`, and threshold-filtered changes (`MIN_PRICE_DELTA_PCT`).
+  - `PersistPipeline`: Idempotent persistence ensuring re-crawling identical items does not duplicate ChangeEvents or snapshots.
+- **SQLAlchemy 2.0 Historical Persistence**:
+  - `Item`, `ItemSnapshot`, `ChangeEvent`, and `SpiderRun` models with `uq_site_external_id` unique constraints.
+  - Standalone `schema.sql` DDL for relational database provisioning.
+- **Multi-Channel Alert Dispatcher**:
+  - `TelegramNotifier`: Dispatches MarkdownV2 alerts with tappable URLs, 4 msg/sec rate limiting, and 10-item digest chunking.
+  - `EmailNotifier`: Generates responsive HTML tables with diff snippets via SendGrid API.
+  - `NotificationDispatcher`: Coordinates fan-out with per-channel deduplication by `(event_id, channel)`.
+- **Celery Tasks & Celery Beat Scheduling**:
+  - Daytime 15-minute job board crawls (06:00–22:00 EAT).
+  - 30-minute e-commerce product crawls.
+  - Automated weekly maintenance task (pruning snapshots >90 days, marking inactive items >24 hours).
+  - Subprocess-isolated crawler process runner preventing Twisted reactor conflicts.
+  - Exponential backoff alert retry policy (up to 5 retries).
+- **FastAPI Read-Only Status & Audit API**:
+  - Endpoints: `GET /health`, `GET /runs`, `GET /changes`.
+- **Demonstration & Testing Utilities**:
+  - `scripts/seed_demo.py`: Seeds demonstration items and allows immediate alert dispatch via `--notify`.
+  - `scripts/test_core_flows.py`: Validates all 5 core application flows end-to-end.
+  - Full test suite with 71 passing tests and >80% coverage on `src/watchtower`.
+- **Docker & GitHub Container Registry**:
+  - Multi-stage `Dockerfile` with non-root security (`appuser`).
+  - Healthchecked `docker-compose.yml` with `redis`, `worker`, `beat`, `api`, and one-off `crawl` services.
+  - Automated GitHub Actions for GHCR multi-arch container publishing and GitHub Release creation.
 
 [Unreleased]: https://github.com/crnjihia/watchtower-scraper/compare/v0.1.0...HEAD
 [0.1.0]: https://github.com/crnjihia/watchtower-scraper/releases/tag/v0.1.0
