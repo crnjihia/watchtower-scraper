@@ -13,6 +13,24 @@ from watchtower.db.session import get_db_session
 router = APIRouter()
 
 
+@router.get("/")
+def get_root() -> Dict[str, Any]:
+    """Root endpoint providing service metadata and API navigation links."""
+    return {
+        "service": "Watchtower Scraper API",
+        "version": "0.1.0",
+        "description": "Ethical monitoring, differential state engine, and alerts for Kenyan markets",
+        "documentation": "/docs",
+        "endpoints": {
+            "health": "/health",
+            "runs": "/runs",
+            "changes": "/changes",
+            "interactive_docs": "/docs",
+            "openapi_spec": "/openapi.json",
+        },
+    }
+
+
 @router.get("/health")
 def get_health(db: Session = Depends(get_db_session)) -> Dict[str, Any]:
     """Check API and database health status."""

@@ -114,7 +114,13 @@ def cmd_status(args):
 
 def cmd_crawl(args):
     """Execute Scrapy crawler for spiders or spider groups."""
-    target = args.target.lower()
+    target = args.target.lower().strip()
+    spider_map = {
+        "myjobmag": "my_job_mag",
+        "brightermonday": "brighter_monday",
+    }
+    target = spider_map.get(target, target)
+
     spiders = []
     if target == "jobs":
         spiders = ["brighter_monday", "fuzu", "my_job_mag"]
@@ -127,12 +133,17 @@ def cmd_crawl(args):
 
     print(f"Starting crawl for: {', '.join(spiders)} (limit={args.limit or 'unlimited'})")
 
+    env = os.environ.copy()
+    env["SCRAPY_SETTINGS_MODULE"] = "watchtower.settings"
+    pythonpath = env.get("PYTHONPATH", "")
+    env["PYTHONPATH"] = f"{SRC_DIR}{os.pathsep}{BASE_DIR}" + (f"{os.pathsep}{pythonpath}" if pythonpath else "")
+
     for sp in spiders:
         cmd = [sys.executable, "-m", "scrapy", "crawl", sp]
         if args.limit:
             cmd.extend(["-s", f"CLOSESPIDER_ITEMCOUNT={args.limit}"])
         print(f"\n--- Running spider: {sp} ---")
-        ret = subprocess.run(cmd)
+        ret = subprocess.run(cmd, env=env)
         if ret.returncode != 0:
             print(f"Spider {sp} exited with code {ret.returncode}")
 
