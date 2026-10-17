@@ -1,60 +1,66 @@
-# ------------------------------------------------------------
-# Base image
-# ------------------------------------------------------------
-FROM python:3.11-slim
+# ============================================================
+# Stage 1: Build virtual environment and wheels
+# ============================================================
+FROM python:3.11-slim AS builder
 
-# Labels for GitHub Container Registry (GHCR) and OCI specification
-LABEL org.opencontainers.image.title="watchtower-scraper" \
-      org.opencontainers.image.description="Ethical Scrapy scraper and market intelligence engine for Kenyan job boards and e-commerce" \
-      org.opencontainers.image.url="https://github.com/crnjihia/watchtower-scraper" \
-      org.opencontainers.image.source="https://github.com/crnjihia/watchtower-scraper" \
-      org.opencontainers.image.licenses="MIT"
+WORKDIR /build
 
-# System dependencies for Scrapy (libxml2, libxslt, etc.) and build tools
 RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
     libxml2-dev \
     libxslt1-dev \
     build-essential \
-    curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Create a non-root user
-ARG UID=1000
-ARG GID=1000
-RUN groupadd -g $GID appgroup && \
-    useradd -m -u $UID -g $GID -s /bin/bash appuser
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
 
-WORKDIR /app
-
-# Install python dependencies
 COPY pyproject.toml .
 RUN pip install --no-cache-dir --upgrade pip setuptools wheel && \
     pip install --no-cache-dir .
 
-# Copy application source, configs, and runner
-COPY README.md .
-COPY run.py .
-COPY entrypoint.sh .
-COPY angalia ./angalia
-COPY config ./config
-COPY tests ./tests
-COPY scrapy.cfg .
-COPY Makefile .
-COPY .env.example .
+# ============================================================
+# Stage 2: Runtime image with non-root user
+# ============================================================
+FROM python:3.11-slim AS runtime
 
-# Prepare data directory for SQLite volume & set permissions
+LABEL org.opencontainers.image.title="watchtower-scraper" \
+      org.opencontainers.image.description="Production-grade scraper for Kenyan job boards and e-commerce platforms" \
+      org.opencontainers.image.licenses="MIT"
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY --from=builder /opt/venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH" \
+    PYTHONUNBUFFERED=1 \
+    DATABASE_URL="sqlite:////app/data/watchtower.db" \
+    REDIS_URL="redis://redis:6379/0"
+
+# Create non-root app user
+ARG UID=1000
+ARG GID=1000
+RUN groupadd -g $GID appuser && \
+    useradd -m -u $UID -g $GID -s /bin/bash appuser
+
+WORKDIR /app
+
+# Copy application artifacts
+COPY pyproject.toml README.md schema.sql ./
+COPY src/ ./src/
+COPY scripts/ ./scripts/
+COPY config/ ./config/
+
+# Install watchtower package in editable mode within virtualenv
+RUN pip install --no-cache-dir --no-deps -e .
+
+# Create volume directories & chown
 RUN mkdir -p /app/data && \
-    chmod +x /app/entrypoint.sh && \
-    chown -R appuser:appgroup /app
+    chown -R appuser:appuser /app
 
 USER appuser
 
-ENV PYTHONUNBUFFERED=1 \
-    SQLITE_DB_PATH="sqlite:////app/data/angalia.db"
+EXPOSE 8000
 
-# Container entrypoint routes to run.py or directly executes custom command
-ENTRYPOINT ["/app/entrypoint.sh"]
-
-# Default command - Celery worker (overridden with 'beat', 'crawl jobs', etc.)
-CMD ["worker"]
+CMD ["celery", "-A", "watchtower.tasks.celery_app", "worker", "--loglevel=INFO"]

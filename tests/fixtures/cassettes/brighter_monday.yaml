@@ -1,0 +1,12 @@
+interactions:
+- request:
+    body: null
+    headers: {}
+    method: GET
+    uri: https://www.brightermonday.co.ke/jobs
+  response:
+    body: {string: "<!doctype html><html><body><h1>Jobs in Kenya</h1></body></html>"}
+    headers:
+      Content-Type: [text/html; charset=utf-8]
+    status: {code: 200, message: OK}
+version: 1

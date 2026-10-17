@@ -69,7 +69,8 @@ def isolated_db(monkeypatch):
 
     monkeypatch.setattr(db_mod, "get_session", mock_get_session)
     monkeypatch.setattr(db_mod, "engine", engine)
-    return engine, Session
+    yield engine, Session
+    engine.dispose()
 
 
 @pytest.fixture
