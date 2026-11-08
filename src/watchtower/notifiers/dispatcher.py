@@ -71,6 +71,39 @@ class NotificationDispatcher:
         # In-process deduplication cache: (event_id, channel_name)
         self._sent_keys: Set[Tuple[int, str]] = set()
 
+    async def dispatch(self, event: ChangeEvent, session: Session) -> Dict[str, bool]:
+        """Send a single event to each configured notifier and return per-channel success."""
+        if event is None:
+            return {}
+
+        supported_channels = {notifier.name: notifier for notifier in self.notifiers if notifier.is_configured()}
+        if not supported_channels:
+            mark_event_notified(session, event.id)
+            session.commit()
+            return {"telegram": False, "email": False}
+
+        result: Dict[str, bool] = {name: False for name in supported_channels}
+        for notifier in self.notifiers:
+            if not notifier.is_configured():
+                continue
+            dedupe_key = (event.id, notifier.name)
+            if dedupe_key in self._sent_keys:
+                result[notifier.name] = True
+                continue
+            payload = build_alert_payload(event)
+            try:
+                success = notifier.send([payload])
+                result[notifier.name] = bool(success)
+                if success:
+                    self._sent_keys.add(dedupe_key)
+            except Exception as e:
+                logger.exception("notifier_dispatch_failed", channel=notifier.name, error=str(e))
+                result[notifier.name] = False
+
+        mark_event_notified(session, event.id)
+        session.commit()
+        return result
+
     def dispatch_events(self, events: List[ChangeEvent], session: Session) -> Dict[str, int]:
         """Convert events to payloads, dedupe, fan-out to channels, and update database."""
         stats = {"total": len(events), "notified": 0, "skipped": 0, "errors": 0}

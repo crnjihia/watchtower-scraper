@@ -1,7 +1,6 @@
 """Scrapy settings for Watchtower Scraper monitoring system."""
 
 import os
-from pathlib import Path
 
 BOT_NAME = "watchtower"
 

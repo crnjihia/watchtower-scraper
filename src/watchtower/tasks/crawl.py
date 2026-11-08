@@ -7,7 +7,7 @@ import structlog
 from scrapy.crawler import CrawlerProcess
 
 from watchtower.db.repository import create_spider_run, finish_spider_run
-from watchtower.db.session import get_session_factory
+from watchtower.db.session import get_session_factory, init_db
 from watchtower.logging import get_logger
 from watchtower.spiders import (
     BrighterMondaySpider,
@@ -66,6 +66,7 @@ def run_spider(self: Any, spider_name: str) -> Dict[str, Any]:
         logger.error("spider_not_found", spider_name=spider_name)
         return {"error": f"Unknown spider: {spider_name}", "status": "failed"}
 
+    init_db()
     session_factory = get_session_factory()
     session = session_factory()
 

@@ -38,6 +38,7 @@ if sys.platform == "win32":
 def cmd_status(args):
     """Show current SQLite database status and item statistics."""
     from sqlalchemy import func
+
     from watchtower.db.models import ChangeEvent, Item, ItemSnapshot, SpiderRun
     from watchtower.db.session import get_session_factory, init_db
 
@@ -50,7 +51,7 @@ def cmd_status(args):
 
     try:
         total_items = session.query(Item).count()
-        active_items = session.query(Item).filter(Item.active == True).count()
+        active_items = session.query(Item).filter(Item.active.is_(True)).count()
         total_snapshots = session.query(ItemSnapshot).count()
         total_events = session.query(ChangeEvent).count()
         total_runs = session.query(SpiderRun).count()
@@ -186,9 +187,8 @@ def cmd_alerts(args):
         sent_count = 0
         for ev in events:
             # Dispatch synchronously for CLI command
-            import asyncio
-            result = asyncio.run(dispatcher.dispatch(ev, session))
-            if result.get("telegram") or result.get("email"):
+            result = dispatcher.dispatch_events([ev], session)
+            if result.get("notified", 0) > 0:
                 sent_count += 1
 
         print(f"Successfully processed alerts for {sent_count} events.")
